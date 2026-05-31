@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Novel Strategic Communications – Home</title>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      position: relative; overflow: hidden; padding: 0 5%;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 80% 50%, rgba(201,146,42,0.09) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 80% at 10% 60%, rgba(26,53,96,0.5) 0%, transparent 60%),
+        linear-gradient(135deg, var(--navy) 0%, #0e2a4f 100%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,146,42,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,146,42,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-content {
+      position: relative; z-index: 2; max-width: 680px;
+      animation: fadeUp 1s ease both;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--gold); }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 6.5vw, 5.2rem);
+      font-weight: 900; line-height: 1.04; margin-bottom: 1.5rem;
+    }
+    h1 em { font-style: italic; color: var(--gold-light); }
+    .hero-sub {
+      font-size: 1.1rem; color: var(--text-muted);
+      line-height: 1.75; max-width: 520px; margin-bottom: 2.5rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .hero-right {
+      position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 1rem;
+      animation: fadeLeft 1.2s ease both 0.3s;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      padding: 1.2rem 1.6rem; min-width: 180px;
+    }
+    .stat-num {
+      font-family: 'Playfair Display', serif; font-size: 2rem;
+      font-weight: 700; color: var(--gold-light);
+    }
+    .stat-label { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+    /* ── INTRO STRIP ── */
+    .intro-strip {
+      background: var(--navy-mid);
+      padding: 5rem 5%;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .intro-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+    }
+    .intro-text p { color: var(--text-muted); line-height: 1.8; font-size: 1rem; margin-bottom: 1.25rem; }
+    .intro-text p strong { color: var(--white); }
+    .intro-cta { margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+    .intro-visual {
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--gold);
+      padding: 2.5rem;
+    }
+    .intro-visual h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.3rem;
+      margin-bottom: 1.5rem; color: var(--gold-pale);
+    }
+    .value-list { display: flex; flex-direction: column; gap: 0.85rem; }
+    .value-item {
+      display: flex; align-items: center; gap: 0.75rem;
+      font-size: 0.9rem; color: var(--text-muted);
+    }
+    .value-item::before { content: '▸'; color: var(--gold); font-size: 0.75rem; }
+
+    /* ── SERVICES PREVIEW ── */
+    .services-preview { padding: 5rem 5%; background: var(--navy); }
+    .preview-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem;
+    }
+    .services-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px; background: var(--border);
+    }
+    .service-card {
+      background: var(--navy); padding: 2.2rem; position: relative; overflow: hidden;
+      transition: background 0.3s;
+    }
+    .service-card:hover { background: var(--navy-mid); }
+    .service-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 0; height: 2px; background: var(--gold); transition: width 0.4s ease;
+    }
+    .service-card:hover::after { width: 100%; }
+    .service-num { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--gold); opacity: 0.65; margin-bottom: 1.2rem; letter-spacing: 0.1em; }
+    .service-icon { font-size: 1.6rem; margin-bottom: 1rem; }
+    .service-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.7rem; }
+    .service-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; }
+
+    /* ── CTA BAND ── */
+    .cta-band {
+      background: var(--gold);
+      padding: 4rem 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 2rem;
+    }
+    .cta-band h2 {
+      font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 3vw, 2.2rem);
+      color: var(--navy); font-weight: 900; max-width: 480px;
+    }
+    .btn-dark {
+      background: var(--navy); color: var(--white);
+      padding: 0.9rem 2rem; border-radius: 2px;
+      font-weight: 600; font-size: 0.88rem;
+      text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase;
+      transition: all 0.2s; display: inline-block; white-space: nowrap;
+    }
+    .btn-dark:hover { background: var(--navy-light); }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeLeft { from { opacity:0; transform:translate(30px,-50%); } to { opacity:1; transform:translate(0,-50%); } }
+
+    @media (max-width: 900px) {
+      .hero-right { display: none; }
+      .intro-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .services-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .services-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">Novel <span>Strategic</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="experience.html">Experience</a></li>
+    <li><a href="team.html">Team</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Premier Communications Agency · Tema, Ghana</div>
+    <h1>Where <em>Strategy</em><br>Meets Execution</h1>
+    <p class="hero-sub">Novel Strategic Communications delivers precision, professionalism, and strategic clarity across high-level engagements — from boardrooms to broadcast.</p>
+    <div class="hero-actions">
+      <a href="services.html" class="btn-primary">Our Services</a>
+      <a href="contact.html" class="btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="stat-card"><div class="stat-num">11+</div><div class="stat-label">Major Engagements</div></div>
+    <div class="stat-card"><div class="stat-num">6</div><div class="stat-label">Core Services</div></div>
+    <div class="stat-card"><div class="stat-num">7</div><div class="stat-label">Expert Team Members</div></div>
+  </div>
+</section>
+
+<!-- INTRO STRIP -->
+<div class="intro-strip">
+  <div class="intro-grid reveal">
+    <div class="intro-text">
+      <div class="section-label">About NSC</div>
+      <h2>Clarity in Every <em>Engagement</em></h2>
+      <p>Novel Strategic Communications (NSC) is a <strong>premier communications and events support agency</strong> committed to delivering precision, professionalism, and strategic clarity.</p>
+      <p>We serve <strong>corporate institutions, government agencies, and non-governmental organizations</strong> across Ghana and beyond, with a team of award-winning journalists and communications professionals.</p>
+      <div class="intro-cta">
+        <a href="about.html" class="btn-primary">Learn More</a>
+        <a href="team.html" class="btn-ghost">Meet the Team</a>
+      </div>
+    </div>
+    <div class="intro-visual">
+      <h3>Our Value Proposition</h3>
+      <div class="value-list">
+        <div class="value-item">Clarity in Communication</div>
+        <div class="value-item">Professional Documentation for Institutional Use</div>
+        <div class="value-item">Strategic Insight for Decision-Making</div>
+        <div class="value-item">Consistency and Excellence Across All Outputs</div>
+        <div class="value-item">Reliable, Timely, Structured Deliverables</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES PREVIEW -->
+<div class="services-preview">
+  <div class="preview-header reveal">
+    <div>
+      <div class="section-label">What We Offer</div>
+      <h2>Our Core <em>Services</em></h2>
+    </div>
+    <a href="services.html" class="btn-ghost">View All Services →</a>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card"><div class="service-num">01</div><div class="service-icon">🎙️</div><div class="service-title">Event Moderation</div><p class="service-desc">Professional facilitation of conferences, panels, and high-level discussions for structured, outcome-driven conversations.</p></div>
+    <div class="service-card"><div class="service-num">02</div><div class="service-icon">📋</div><div class="service-title">Rapporteuring & Documentation</div><p class="service-desc">Comprehensive event documentation — detailed reports, communiqués, policy briefs, and conference summaries.</p></div>
+    <div class="service-card"><div class="service-num">03</div><div class="service-icon">📅</div><div class="service-title">Event Coordination & Planning</div><p class="service-desc">Efficient planning and seamless execution of events with unwavering professionalism.</p></div>
+    <div class="service-card"><div class="service-num">04</div><div class="service-icon">📡</div><div class="service-title">Media Coordination & Relations</div><p class="service-desc">Strategic media engagement ensuring effective coverage, visibility, and consistent messaging.</p></div>
+    <div class="service-card"><div class="service-num">05</div><div class="service-icon">💡</div><div class="service-title">Strategic Communication Consultancy</div><p class="service-desc">Expert guidance to help organizations develop clear, impactful communication strategies.</p></div>
+    <div class="service-card"><div class="service-num">06</div><div class="service-icon">🏢</div><div class="service-title">Corporate Branding & Communication</div><p class="service-desc">High-quality communication materials that reflect your organizational identity and professionalism.</p></div>
+  </div>
+</div>
+
+<!-- CTA BAND -->
+<div class="cta-band reveal">
+  <h2>Ready to elevate your next engagement?</h2>
+  <a href="contact.html" class="btn-dark">Let's Work Together →</a>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Novel <span>Strategic</span> Communications</div>
+      <div class="footer-tagline">Where Strategy Meets Execution</div>
+    </div>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="experience.html">Experience</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="footer-social">
+      <a href="#" class="social-btn" title="Facebook">f</a>
+      <a href="#" class="social-btn" title="Instagram">in</a>
+    </div>
+  </div>
+  <p class="footer-copy">© 2025 Novel Strategic Communications. All rights reserved. Tema, Community 9, Ghana.</p>
+</footer>
+
+<script src="shared.js"></script>
+</body>
+</html>
