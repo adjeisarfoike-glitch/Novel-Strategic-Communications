@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Experience – Novel Strategic Communications</title>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    .exp-main { padding: 5rem 5%; background: var(--navy); }
+    .exp-layout {
+      display: grid; grid-template-columns: 1.3fr 1fr; gap: 5rem; align-items: start;
+    }
+
+    /* Client cards */
+    .exp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1.75rem;
+    }
+    .exp-card {
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .exp-card:hover { transform: translateY(-6px); border-color: var(--gold); }
+
+    /* Image / placeholder area — swap the <img src> to add a real photo,
+       the initial watermark disappears automatically once the image loads */
+    .exp-card-media {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--navy-light) 0%, var(--navy-mid) 100%);
+    }
+    .exp-card-initial {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 3.6rem; font-weight: 900;
+      color: rgba(201,146,42,0.22);
+      letter-spacing: 0.02em;
+      user-select: none;
+    }
+    .exp-card-media img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover;
+      /* duotone treatment at rest, echoes the navy/gold identity */
+      filter: grayscale(85%) sepia(18%) brightness(0.75) contrast(1.05);
+      transition: filter 0.5s ease, transform 0.5s ease;
+    }
+    .exp-card:hover .exp-card-media img {
+      filter: grayscale(0%) sepia(0%) brightness(1) contrast(1);
+      transform: scale(1.045);
+    }
+    .exp-card-media::after {
+      /* thin gold seam along the bottom edge of the image, in the site's language */
+      content: '';
+      position: absolute; left: 0; right: 0; bottom: 0;
+      height: 2px; background: var(--gold);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.35s ease;
+    }
+    .exp-card:hover .exp-card-media::after { transform: scaleX(1); }
+
+    .exp-card-body { padding: 1.35rem 1.5rem 1.5rem; }
+    .exp-card-client {
+      font-weight: 600; font-size: 0.98rem; color: var(--white);
+      line-height: 1.3; margin-bottom: 0.4rem;
+    }
+    .exp-card-role {
+      font-size: 0.78rem; color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    /* Sidebar */
+    .exp-sidebar { position: sticky; top: 7rem; }
+    .sidebar-box {
+      background: var(--navy-mid); border: 1px solid var(--border);
+      border-top: 3px solid var(--gold); padding: 2rem; margin-bottom: 1.5rem;
+    }
+    .sidebar-box h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.2rem;
+      color: var(--gold-pale); margin-bottom: 1.25rem;
+    }
+    .client-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .client-tag {
+      border: 1px solid var(--border); padding: 0.5rem 1rem;
+      font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.04em;
+      transition: all 0.2s;
+    }
+    .client-tag:hover { border-color: var(--gold); color: var(--gold-light); }
+    .why-list { display: flex; flex-direction: column; gap: 0.85rem; }
+    .why-item {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      font-size: 0.87rem; color: var(--text-muted);
+    }
+    .why-item::before { content: '✓'; color: var(--gold); font-weight: 700; flex-shrink: 0; }
+
+    /* Stats bar */
+    .stats-bar {
+      background: var(--navy-mid); border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 3.5rem 5%;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1.5px; background: var(--border);
+    }
+    .stat-item {
+      background: var(--navy-mid); padding: 2rem; text-align: center;
+    }
+    .stat-big {
+      font-family: 'Playfair Display', serif; font-size: 3rem;
+      font-weight: 900; color: var(--gold-light); line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .stat-label { font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+
+    @media (max-width: 900px) {
+      .exp-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .exp-sidebar { position: static; }
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+      .exp-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    }
+
+    /* Follow-us CTA in the footer */
+    .footer-follow { display: flex; align-items: center; gap: 1rem; }
+    .footer-follow-label {
+      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      color: var(--gold-pale); letter-spacing: 0.1em; text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .social-btn svg { width: 17px; height: 17px; fill: currentColor; }
+    .social-btn { color: var(--text-muted); }
+    .social-btn:hover { color: var(--navy); background: var(--gold); border-color: var(--gold); }
+    @media (max-width: 900px) {
+      .footer-follow { width: 100%; justify-content: flex-start; }
+    }
+    /* Follow-us CTA banner, above the card grid */
+    .cta-banner {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 2rem; flex-wrap: wrap;
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      padding: 2rem 2.5rem;
+      margin-bottom: 3rem;
+    }
+    .cta-banner-text h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.35rem;
+      color: var(--white); margin-bottom: 0.35rem;
+    }
+    .cta-banner-text p { color: var(--text-muted); font-size: 0.92rem; max-width: 420px; }
+    .cta-banner-icons { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+    .cta-social-btn {
+      width: 50px; height: 50px; border-radius: 50%;
+      border: 1.5px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold-light);
+      transition: background 0.25s, color 0.25s, transform 0.25s;
+    }
+    .cta-social-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .cta-social-btn:hover { background: var(--gold); color: var(--navy); transform: translateY(-3px); }
+    @media (max-width: 600px) {
+      .cta-banner { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">Novel <span>Strategic</span> Communications</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="experience.html">Experience</a></li>
+    <li><a href="team.html">Team</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="page-banner">
+  <div class="page-banner-grid"></div>
+  <div class="page-banner-inner">
+    <div class="page-eyebrow">Track Record</div>
+    <h1>Selected <em>Experience</em></h1>
+    <p>A portfolio of high-level engagements across corporate, institutional, media, and development sectors.</p>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar reveal">
+  <div class="stat-item"><div class="stat-big">11+</div><div class="stat-label">Engagements</div></div>
+  <div class="stat-item"><div class="stat-big">5+</div><div class="stat-label">Sectors Served</div></div>
+  <div class="stat-item"><div class="stat-big">6</div><div class="stat-label">Service Lines</div></div>
+  <div class="stat-item"><div class="stat-big">7</div><div class="stat-label">Team Experts</div></div>
+</div>
+
+<!-- EXPERIENCE MAIN -->
+<div class="exp-main">
+  <!-- Replace the href values below with your actual Facebook and Instagram page URLs -->
+  <div class="cta-banner reveal">
+    <div class="cta-banner-text">
+      <h3>Follow Our Work</h3>
+      <p>See more from these engagements and what we're covering next.</p>
+    </div>
+    <div class="cta-banner-icons">
+      <a href="https://facebook.com/YOUR_PAGE" class="cta-social-btn" target="_blank" rel="noopener noreferrer" aria-label="Follow Novel Strategic Communications on Facebook" title="Follow us on Facebook">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.5 9.95v-7.04H7.9V12h2.6V9.8c0-2.57 1.53-4 3.87-4 1.12 0 2.29.2 2.29.2v2.52h-1.29c-1.27 0-1.67.79-1.67 1.6V12h2.85l-.46 2.91h-2.39v7.04A10 10 0 0 0 22 12z"/></svg>
+      </a>
+      <a href="https://instagram.com/YOUR_HANDLE" class="cta-social-btn" target="_blank" rel="noopener noreferrer" aria-label="Follow Novel Strategic Communications on Instagram" title="Follow us on Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.97.24 2.43.4.61.24 1.05.52 1.51.98.46.46.75.9.98 1.51.17.46.36 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.97-.4 2.43-.24.61-.52 1.05-.98 1.51-.46.46-.9.75-1.51.98-.46.17-1.26.36-2.43.4-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.97-.24-2.43-.4a4.1 4.1 0 0 1-1.51-.98 4.1 4.1 0 0 1-.98-1.51c-.17-.46-.36-1.26-.4-2.43C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.24-1.97.4-2.43.24-.61.52-1.05.98-1.51.46-.46.9-.75 1.51-.98.46-.17 1.26-.36 2.43-.4C8.42 2.17 8.8 2.16 12 2.16zm0 1.62c-3.15 0-3.5.01-4.74.07-1.03.05-1.6.22-1.97.36-.5.19-.85.42-1.22.79-.37.37-.6.72-.79 1.22-.14.37-.3.94-.36 1.97-.06 1.24-.07 1.59-.07 4.74s.01 3.5.07 4.74c.05 1.03.22 1.6.36 1.97.19.5.42.85.79 1.22.37.37.72.6 1.22.79.37.14.94.3 1.97.36 1.24.06 1.59.07 4.74.07s3.5-.01 4.74-.07c1.03-.05 1.6-.22 1.97-.36.5-.19.85-.42 1.22-.79.37-.37.6-.72.79-1.22.14-.37.3-.94.36-1.97.06-1.24.07-1.59.07-4.74s-.01-3.5-.07-4.74c-.05-1.03-.22-1.6-.36-1.97a3.1 3.1 0 0 0-.79-1.22 3.1 3.1 0 0 0-1.22-.79c-.37-.14-.94-.3-1.97-.36-1.24-.06-1.59-.07-4.74-.07zm0 4.14a5.08 5.08 0 1 1 0 10.16 5.08 5.08 0 0 1 0-10.16zm0 1.62a3.46 3.46 0 1 0 0 6.92 3.46 3.46 0 0 0 0-6.92zm5.28-1.8a1.19 1.19 0 1 1 0 2.38 1.19 1.19 0 0 1 0-2.38z"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="exp-layout">
+    <!--
+      To add a real photo to a card: replace the "src" path on that card's <img>
+      with your image file (e.g. images/experience/nutrifoods.jpg).
+      Until a real image exists at that path, the onerror hides the broken
+      image and the gold initial letter behind it shows instead — so cards
+      look intentional even before photos are added.
+    -->
+    <div class="exp-grid reveal">
+
+      <div class="exp-card">
+        <div class="exp-card-media">
+          <span class="exp-card-initial">N</span>
+          <img src="images/experience/nutrifoods.jpg" alt="Nutrifoods" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="exp-card-body">
+          <div class="exp-card-client">Nutrifoods</div>
+          <div class="exp-card-role">Event Moderation & Rapporteuring</div>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-card-media">
+          <span class="exp-card-initial">A</span>
+          <img src="images/experience/aog-8th-regional.jpg" alt="Assemblies of God — 8th Regional Council Meeting" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="exp-card-body">
+          <div class="exp-card-client">Assemblies of God — 8th Regional Council Meeting</div>
+          <div class="exp-card-role">Media Coordination</div>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-card-media">
+          <span class="exp-card-initial">H</span>
+          <img src="images/experience/hotels-and-deals-ghana.jpg" alt="Hotels and Deals Ghana" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="exp-card-body">
+          <div class="exp-card-client">Hotels and Deals Ghana</div>
+          <div class="exp-card-role">Moderation & Media Coordination</div>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-card-media">
+          <span class="exp-card-initial">I</span>
+          <img src="images/experience/airtad-26.jpg" alt="Implementers (AIRTAD'26)" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="exp-card-body">
+          <div class="exp-card-client">Implementers (AIRTAD'26)</div>
+          <div class="exp-card-role">Event Rapporteuring & Documentation</div>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-card-media">
+          <span class="exp-card-initial">G</span>
+          <img src="images/experience/gja.jpg" alt="Ghana Journalists Association (GJA)" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="exp-card-body">
+          <div class="exp-card-client">Ghana Journalists Association (GJA)</div>
+          <div class="exp-card-role">Event Rapporteuring & Documentation</div>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-card-media">
+          <span class="exp-card-initial">A</span>
+          <img src="images/experience/african-media-convention.jpg" alt="African Media Convention" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="exp-card-body">
+          <div class="exp-card-client">African Media Convention</div>
+          <div class="exp-card-role">Multi-session Rapporteuring</div>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-card-media">
+          <span class="exp-card-initial">G</span>
+          <img src="images/experience/ghana-chamber-of-mines.jpg" alt="Ghana Chamber of Mines" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="exp-card-body">
+          <div class="exp-card-client">Ghana Chamber of Mines</div>
+          <div class="exp-card-role">Corporate Documentation</div>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-card-media">
+          <span class="exp-card-initial">T</span>
+          <img src="images/experience/trail-blazers.jpg" alt="Trail Blazers" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="exp-card-body">
+          <div class="exp-card-client">Trail Blazers</div>
+          <div class="exp-card-role">Event Moderation & Rapporteuring</div>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-card-media">
+          <span class="exp-card-initial">W</span>
+          <img src="images/experience/wisa-festival.jpg" alt="Women in Sustainability Africa (WiSA) International Festival" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="exp-card-body">
+          <div class="exp-card-client">Women in Sustainability Africa (WiSA) International Festival</div>
+          <div class="exp-card-role">Event Rapporteuring</div>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-card-media">
+          <span class="exp-card-initial">W</span>
+          <img src="images/experience/wampex.jpg" alt="West Africa Mining and Power Expo (WAMPEX '26 and '25)" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="exp-card-body">
+          <div class="exp-card-client">West Africa Mining and Power Expo (WAMPEX '26 and '25)</div>
+          <div class="exp-card-role">Rapporteuring Services</div>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-card-media">
+          <span class="exp-card-initial">G</span>
+          <img src="images/experience/gema.jpg" alt="Ghana Evangelical Missions Association (GEMA)" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="exp-card-body">
+          <div class="exp-card-client">Ghana Evangelical Missions Association (GEMA)</div>
+          <div class="exp-card-role">Media Coordination & Event Rapporteuring</div>
+        </div>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-card-media">
+          <span class="exp-card-initial">B</span>
+          <img src="images/experience/broadcast-documentary.jpg" alt="Broadcast & Documentary Projects" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="exp-card-body">
+          <div class="exp-card-client">Broadcast & Documentary Projects</div>
+          <div class="exp-card-role">Scriptwriting & Communication Materials</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="exp-sidebar reveal">
+      <div class="sidebar-box">
+        <h3>Clients We Serve</h3>
+        <div class="client-tags">
+          <div class="client-tag">Government Ministries</div>
+          <div class="client-tag">NGOs</div>
+          <div class="client-tag">Corporate Institutions</div>
+          <div class="client-tag">Media Organizations</div>
+          <div class="client-tag">Intl. Development Partners</div>
+          <div class="client-tag">Religious Organizations</div>
+        </div>
+      </div>
+      <div class="sidebar-box">
+        <h3>Why Choose NSC?</h3>
+        <div class="why-list">
+          <div class="why-item">Proven expertise in high-level event documentation</div>
+          <div class="why-item">Strong media and communication background</div>
+          <div class="why-item">Professional, timely, and structured outputs</div>
+          <div class="why-item">Ability to manage complex multi-session engagements</div>
+          <div class="why-item">Commitment to excellence and attention to detail</div>
+        </div>
+      </div>
+      <a href="contact.html" class="btn-primary" style="width:100%;text-align:center;">Commission NSC →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Novel <span>Strategic</span> Communications</div>
+      <div class="footer-tagline">Where Strategy Meets Execution</div>
+    </div>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="experience.html">Experience</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="footer-follow">
+      <span class="footer-follow-label">Follow us</span>
+      <div class="footer-social">
+        <!-- Replace the href values below with your actual Facebook and Instagram page URLs -->
+        <a href="https://facebook.com/YOUR_PAGE" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="Follow Novel Strategic Communications on Facebook" title="Follow us on Facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.5 9.95v-7.04H7.9V12h2.6V9.8c0-2.57 1.53-4 3.87-4 1.12 0 2.29.2 2.29.2v2.52h-1.29c-1.27 0-1.67.79-1.67 1.6V12h2.85l-.46 2.91h-2.39v7.04A10 10 0 0 0 22 12z"/></svg>
+        </a>
+        <a href="https://instagram.com/YOUR_HANDLE" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="Follow Novel Strategic Communications on Instagram" title="Follow us on Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.97.24 2.43.4.61.24 1.05.52 1.51.98.46.46.75.9.98 1.51.17.46.36 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.97-.4 2.43-.24.61-.52 1.05-.98 1.51-.46.46-.9.75-1.51.98-.46.17-1.26.36-2.43.4-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.97-.24-2.43-.4a4.1 4.1 0 0 1-1.51-.98 4.1 4.1 0 0 1-.98-1.51c-.17-.46-.36-1.26-.4-2.43C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.24-1.97.4-2.43.24-.61.52-1.05.98-1.51.46-.46.9-.75 1.51-.98.46-.17 1.26-.36 2.43-.4C8.42 2.17 8.8 2.16 12 2.16zm0 1.62c-3.15 0-3.5.01-4.74.07-1.03.05-1.6.22-1.97.36-.5.19-.85.42-1.22.79-.37.37-.6.72-.79 1.22-.14.37-.3.94-.36 1.97-.06 1.24-.07 1.59-.07 4.74s.01 3.5.07 4.74c.05 1.03.22 1.6.36 1.97.19.5.42.85.79 1.22.37.37.72.6 1.22.79.37.14.94.3 1.97.36 1.24.06 1.59.07 4.74.07s3.5-.01 4.74-.07c1.03-.05 1.6-.22 1.97-.36.5-.19.85-.42 1.22-.79.37-.37.6-.72.79-1.22.14-.37.3-.94.36-1.97.06-1.24.07-1.59.07-4.74s-.01-3.5-.07-4.74c-.05-1.03-.22-1.6-.36-1.97a3.1 3.1 0 0 0-.79-1.22 3.1 3.1 0 0 0-1.22-.79c-.37-.14-.94-.3-1.97-.36-1.24-.06-1.59-.07-4.74-.07zm0 4.14a5.08 5.08 0 1 1 0 10.16 5.08 5.08 0 0 1 0-10.16zm0 1.62a3.46 3.46 0 1 0 0 6.92 3.46 3.46 0 0 0 0-6.92zm5.28-1.8a1.19 1.19 0 1 1 0 2.38 1.19 1.19 0 0 1 0-2.38z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <p class="footer-copy">© 2025 Novel Strategic Communications. All rights reserved. Tema, Community 9, Ghana.</p>
+</footer>
+
+<script src="shared.js"></script>
+</body>
+</html>
